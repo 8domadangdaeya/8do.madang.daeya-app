@@ -440,7 +440,7 @@
     const SUPABASE_URL = "https://oypfmqyfwgaasqugenlh.supabase.co";
 const SUPABASE_KEY = "sb_publishable_kMPKpoUOhTvuE5KXvvWEiA_3HfVK-Au";
 
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     const MENU_ITEMS = ["공동구매 상품", "과일", "야채", "정육"];
     const PICKUP_OPTIONS = [
@@ -509,7 +509,7 @@ const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 async function saveState() {
   // 상품 저장
   for (const product of state.products) {
-    await supabase.from("products").upsert({
+    await sb.from("products").upsert({
       id: product.id,
       name: product.name,
       price: product.price,
@@ -525,7 +525,7 @@ async function saveState() {
 
   // 주문 저장
   for (const order of state.orders) {
-    await supabase.from("orders").upsert({
+    await sb.from("orders").upsert({
       id: order.id,
       product_id: order.productId,
       product_name: order.productName,
