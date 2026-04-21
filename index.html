@@ -568,37 +568,13 @@ orders: [],
       editFeatured: true,
     };
 
-async function saveState() {
-  // 상품 저장
-  for (const product of state.products) {
-    await sb.from("products").upsert({
-      id: product.id,
-      name: product.name,
-      price: product.price,
-      stock: product.stock,
-      image: product.image,
-      description: product.description,
-      pickup_date: product.pickupDate,
-      category: product.category,
-      created_order: product.createdOrder,
-      is_featured: product.isFeatured
-    });
-  }
-
-  // 주문 저장
-  for (const order of state.orders) {
-    await sb.from("orders").upsert({
-      id: order.id,
-      product_id: order.productId,
-      product_name: order.productName,
-      pickup_date: order.pickupDate,
-      customer_name: order.customerName,
-      quantity: order.quantity,
-      pickup: order.pickup,
-      note: order.note,
-    });
-  }
+function saveState() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify({
+    currentAdminPassword: state.currentAdminPassword,
+    storeImage: state.storeImage,
+  }));
 }
+
     function currency(value) {
       return Number(value).toLocaleString("ko-KR") + "원";
     }
@@ -1038,12 +1014,23 @@ async function saveState() {
       alert("상품이 수정되었습니다.");
     };
 
-    window.deleteProduct = (id) => {
-      if (!confirm("이 상품을 삭제할까요?")) return;
-      state.products = state.products.filter(p => p.id !== id);
-      saveState();
-      render();
-    };
+window.deleteProduct = async (id) => {
+  if (!confirm("이 상품을 삭제할까요?")) return;
+
+  const { error } = await sb
+    .from("products")
+    .delete()
+    .eq("id", id);
+
+  if (error) {
+    console.error("상품 삭제 실패:", error);
+    alert("상품 삭제에 실패했습니다.");
+    return;
+  }
+
+  state.products = state.products.filter(p => p.id !== id);
+  render();
+};
 
     window.openReservation = (id) => {
       const product = productsWithMeta().find(p => p.id === id);
