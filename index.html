@@ -506,15 +506,37 @@ const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
       editFeatured: true,
     };
 
-    function saveState() {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({
-        products: state.products,
-        orders: state.orders,
-        currentAdminPassword: state.currentAdminPassword,
-        storeImage: state.storeImage,
-      }));
-    }
+async function saveState() {
+  // 상품 저장
+  for (const product of state.products) {
+    await supabase.from("products").upsert({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      stock: product.stock,
+      image: product.image,
+      description: product.description,
+      pickup_date: product.pickupDate,
+      category: product.category,
+      created_order: product.createdOrder,
+      is_featured: product.isFeatured
+    });
+  }
 
+  // 주문 저장
+  for (const order of state.orders) {
+    await supabase.from("orders").upsert({
+      id: order.id,
+      product_id: order.productId,
+      product_name: order.productName,
+      pickup_date: order.pickupDate,
+      customer_name: order.customerName,
+      quantity: order.quantity,
+      pickup: order.pickup,
+      note: order.note,
+    });
+  }
+}
     function currency(value) {
       return Number(value).toLocaleString("ko-KR") + "원";
     }
