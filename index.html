@@ -1,0 +1,1023 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>팔도마당 대야점</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Noto Sans KR", sans-serif;
+      background: #f8fafc;
+      color: #0f172a;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 16px;
+    }
+    .card {
+      background: #fff;
+      border-radius: 24px;
+      box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08);
+      border: 1px solid #e2e8f0;
+    }
+    .header {
+      padding: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .brand-image {
+      width: 64px;
+      height: 64px;
+      border-radius: 18px;
+      background: #e2e8f0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      color: #64748b;
+      font-size: 12px;
+      text-align: center;
+    }
+    .brand-image img { width: 100%; height: 100%; object-fit: cover; }
+    h1, h2, h3, p { margin: 0; }
+    .sub { margin-top: 8px; color: #475569; font-size: 14px; }
+    .controls { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; position: relative; }
+    .badge {
+      background: #e2e8f0;
+      color: #334155;
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .button {
+      border: 1px solid #cbd5e1;
+      background: white;
+      color: #0f172a;
+      border-radius: 16px;
+      padding: 10px 14px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .button.primary {
+      background: #0f172a;
+      color: white;
+      border-color: #0f172a;
+    }
+    .button.secondary {
+      background: #f8fafc;
+    }
+    .button.full { width: 100%; }
+    .menu {
+      position: absolute;
+      right: 0;
+      top: 48px;
+      width: 220px;
+      background: white;
+      border: 1px solid #e2e8f0;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.12);
+      padding: 8px;
+      display: none;
+      z-index: 20;
+    }
+    .menu.open { display: block; }
+    .menu button {
+      width: 100%;
+      text-align: left;
+      padding: 10px 12px;
+      border: 0;
+      background: transparent;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+    .menu button.active { background: #0f172a; color: white; }
+    .hero {
+      margin-top: 24px;
+      background: linear-gradient(90deg, #0f172a 0%, #334155 100%);
+      color: white;
+      border-radius: 24px;
+      padding: 28px;
+    }
+    .hero p { margin-top: 8px; color: #cbd5e1; font-size: 14px; }
+    .hero-buttons { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+    .hero-buttons .button { background: white; }
+    .admin-stats {
+      margin-top: 20px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .stat { padding: 20px; }
+    .stat-title { color: #64748b; font-size: 14px; }
+    .stat-value { font-size: 32px; font-weight: 700; margin-top: 6px; }
+    .section-title { margin: 24px 0 8px; font-size: 28px; font-weight: 800; }
+    .section-sub { color: #64748b; font-size: 14px; }
+    .product-grid {
+      margin-top: 16px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+    .product-card { overflow: hidden; }
+    .product-image { width: 100%; aspect-ratio: 4 / 3; background: #e2e8f0; object-fit: cover; }
+    .product-body { padding: 18px; }
+    .row { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+    .price { margin-top: 8px; font-size: 20px; font-weight: 700; }
+    .small-badges { display: flex; gap: 8px; flex-wrap: wrap; margin: 14px 0; }
+    .outline-badge {
+      border: 1px solid #cbd5e1;
+      color: #334155;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .dark-badge {
+      background: #0f172a;
+      color: white;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .desc { color: #475569; font-size: 14px; line-height: 1.5; }
+    .pickup { margin-top: 6px; color: #334155; font-size: 14px; font-weight: 600; }
+    .stock-box {
+      margin: 16px 0;
+      border-radius: 16px;
+      background: #f8fafc;
+      padding: 12px 14px;
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+    }
+    .soldout {
+      border: 1px solid #fecaca;
+      background: #fef2f2;
+      border-radius: 16px;
+      padding: 14px;
+      color: #b91c1c;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    .table-card, .admin-card { margin-top: 16px; }
+    .table-card { padding: 20px; overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; min-width: 900px; }
+    th, td { text-align: left; padding: 12px 8px; border-bottom: 1px solid #e2e8f0; font-size: 14px; }
+    th { color: #64748b; }
+    .admin-grid {
+      margin-top: 16px;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .admin-card { padding: 18px; }
+    .admin-card p { margin-top: 8px; color: #64748b; font-size: 14px; }
+    .admin-actions { display: flex; gap: 8px; margin-top: 12px; }
+    .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+    .field { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
+    .field label { font-size: 14px; font-weight: 700; }
+    input, textarea, select {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid #cbd5e1;
+      border-radius: 14px;
+      font-size: 14px;
+      font-family: inherit;
+      background: white;
+    }
+    textarea { min-height: 96px; resize: vertical; }
+    .toggle-buttons, .pickup-buttons { display: flex; flex-wrap: wrap; gap: 8px; }
+    .pickup-buttons { display: grid; grid-template-columns: repeat(4, 1fr); }
+    .preview-image {
+      margin-top: 10px;
+      width: 100%;
+      height: 140px;
+      object-fit: cover;
+      border-radius: 16px;
+      border: 1px solid #e2e8f0;
+    }
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 50;
+    }
+    .modal.open { display: flex; }
+    .modal-content {
+      width: 100%;
+      max-width: 720px;
+      max-height: 90vh;
+      overflow-y: auto;
+      background: white;
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: 0 20px 60px rgba(15, 23, 42, 0.2);
+    }
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 20px;
+    }
+    .hidden { display: none !important; }
+    .ghost-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid #cbd5e1;
+      background: white;
+      cursor: pointer;
+    }
+    @media (max-width: 1100px) {
+      .product-grid, .admin-grid, .admin-stats { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 720px) {
+      .product-grid, .admin-grid, .admin-stats, .form-grid, .pickup-buttons { grid-template-columns: 1fr; }
+      .header { align-items: flex-start; }
+      .controls { width: 100%; }
+      .menu { left: 0; right: auto; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card header">
+      <div class="brand">
+        <div class="brand-image" id="brandImageBox">매장 이미지</div>
+        <div>
+          <h1>팔도마당 대야점</h1>
+          <p class="sub">고객님들의 식탁을 책임지는 '팔도마당 대야점' 입니다.</p>
+        </div>
+      </div>
+      <div class="controls">
+        <div class="badge">로컬 테스트 모드</div>
+        <button class="button" id="menuToggle">메뉴 ▼</button>
+        <div class="menu" id="menuPanel"></div>
+        <button class="button hidden" id="addProductBtn">신규 상품 추가</button>
+        <button class="button hidden" id="logoutAdminBtn">관리자 종료</button>
+      </div>
+    </div>
+
+    <div class="admin-stats hidden" id="adminStats"></div>
+
+    <div class="hero card">
+      <h2>오늘의 신선한 장보기</h2>
+      <p>과일, 야채, 정육, 공동구매 상품까지 한눈에 확인하고 간편하게 예약하세요.</p>
+      <div class="hero-buttons" id="heroButtons"></div>
+    </div>
+
+    <div id="content"></div>
+  </div>
+
+  <div class="modal" id="adminLoginModal">
+    <div class="modal-content">
+      <h3>관리자 모드</h3>
+      <div class="field">
+        <label>관리자번호를 입력해주세요</label>
+        <input type="password" id="adminPasswordInput" placeholder="관리자번호 입력" />
+      </div>
+      <p class="sub">누구도 알면 안되니 관리자번호를 입력해주세요.</p>
+      <p id="adminError" style="color:#dc2626; font-size:14px; margin-top:8px;"></p>
+      <div class="modal-actions">
+        <button class="button" onclick="closeModal('adminLoginModal')">취소</button>
+        <button class="button primary" id="confirmAdminLoginBtn">확인</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="addProductModal">
+    <div class="modal-content">
+      <h3>신규 상품 추가</h3>
+      <div class="field">
+        <label>카테고리</label>
+        <select id="newCategory"></select>
+      </div>
+      <div class="field">
+        <label>상품명</label>
+        <input id="newName" placeholder="상품명 입력" />
+      </div>
+      <div class="form-grid">
+        <div class="field">
+          <label>가격</label>
+          <input type="number" id="newPrice" placeholder="가격 입력" />
+        </div>
+        <div class="field">
+          <label>재고</label>
+          <input type="number" id="newStock" placeholder="재고 입력" value="1" />
+        </div>
+      </div>
+      <div class="field">
+        <label>픽업일</label>
+        <input type="date" id="newPickupDate" />
+      </div>
+      <div class="field">
+        <label>상품 이미지</label>
+        <button class="button" id="newImageButton">이미지 업로드</button>
+        <input type="file" id="newImageInput" accept="image/*" class="hidden" />
+        <img id="newImagePreview" class="preview-image hidden" alt="미리보기" />
+      </div>
+      <div class="field">
+        <label>메인화면 노출</label>
+        <div class="toggle-buttons">
+          <button class="button primary" id="newFeaturedYes">노출</button>
+          <button class="button" id="newFeaturedNo">미노출</button>
+        </div>
+      </div>
+      <div class="field">
+        <label>설명</label>
+        <textarea id="newDescription" placeholder="상품 설명 입력"></textarea>
+      </div>
+      <div class="modal-actions">
+        <button class="button" onclick="closeModal('addProductModal')">취소</button>
+        <button class="button primary" id="saveNewProductBtn">추가</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="editProductModal">
+    <div class="modal-content">
+      <h3>상품 수정</h3>
+      <div class="field">
+        <label>카테고리</label>
+        <select id="editCategory"></select>
+      </div>
+      <div class="field">
+        <label>상품명</label>
+        <input id="editName" />
+      </div>
+      <div class="form-grid">
+        <div class="field">
+          <label>가격</label>
+          <input type="number" id="editPrice" />
+        </div>
+        <div class="field">
+          <label>재고</label>
+          <input type="number" id="editStock" />
+        </div>
+      </div>
+      <div class="field">
+        <label>픽업일</label>
+        <input type="date" id="editPickupDate" />
+      </div>
+      <div class="field">
+        <label>상품 이미지</label>
+        <button class="button" id="editImageButton">이미지 업로드</button>
+        <input type="file" id="editImageInput" accept="image/*" class="hidden" />
+        <img id="editImagePreview" class="preview-image hidden" alt="미리보기" />
+      </div>
+      <div class="field">
+        <label>메인화면 노출</label>
+        <div class="toggle-buttons">
+          <button class="button" id="editFeaturedYes">노출</button>
+          <button class="button" id="editFeaturedNo">미노출</button>
+        </div>
+      </div>
+      <div class="field">
+        <label>설명</label>
+        <textarea id="editDescription"></textarea>
+      </div>
+      <div class="modal-actions">
+        <button class="button" onclick="closeModal('editProductModal')">취소</button>
+        <button class="button primary" id="saveEditedProductBtn">저장</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="reservationModal">
+    <div class="modal-content">
+      <h3>예약하기</h3>
+      <div class="card" style="padding:16px; background:#f8fafc; border-radius:16px; margin-top:16px;">
+        <div id="reservationProductName" style="font-weight:700;"></div>
+        <div id="reservationProductPrice" class="sub"></div>
+        <div id="reservationRemaining" class="sub" style="margin-top:8px;"></div>
+        <div id="reservationPickupDate" style="margin-top:8px; font-size:14px; font-weight:700; color:#334155;"></div>
+      </div>
+      <div class="field">
+        <label>예약번호 4자리 또는 닉네임</label>
+        <input id="reservationNickname" placeholder="예: 1234 또는 행복사과" />
+      </div>
+      <div class="field">
+        <label>수량</label>
+        <input type="number" id="reservationQuantity" value="1" min="1" />
+      </div>
+      <div class="field">
+        <label>픽업 시간</label>
+        <div class="pickup-buttons" id="pickupButtons"></div>
+      </div>
+      <div class="field">
+        <label>요청사항 및 보관 문의</label>
+        <textarea id="reservationNote" placeholder="예: 18시 이후 방문 / 하루 보관 요청"></textarea>
+      </div>
+      <div class="modal-actions">
+        <button class="button" onclick="closeModal('reservationModal')">취소</button>
+        <button class="button primary" id="confirmReservationBtn">예약 완료</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const MENU_ITEMS = ["공동구매 상품", "과일", "야채", "정육"];
+    const PICKUP_OPTIONS = [
+      "10:00", "10:30", "11:00", "11:30", "12:00",
+      "12:30", "13:00", "13:30", "14:00", "14:30",
+      "15:00", "15:30", "16:00", "16:30", "17:00",
+      "17:30", "18:00", "18:30", "19:00", "19:30"
+    ];
+    const STORAGE_KEY = "paldomadang-html-app-v1";
+
+    const initialProducts = [
+      {
+        id: 1,
+        category: "공동구매 상품",
+        name: "꿀맛 신고배",
+        price: 5900,
+        stock: 5,
+        image: "https://images.unsplash.com/photo-1568702846914-96b305d2aaeb?q=80&w=1200&auto=format&fit=crop",
+        description: "달콤한 과즙 가득! 당일 픽업 특가 상품",
+        pickupDate: "2026-04-28",
+        createdOrder: 1,
+        isFeatured: true,
+      },
+      {
+        id: 2,
+        category: "과일",
+        name: "제스프리 골드키위",
+        price: 8900,
+        stock: 8,
+        image: "https://images.unsplash.com/photo-1619566636858-adf3ef46400b?q=80&w=1200&auto=format&fit=crop",
+        description: "상큼달콤한 인기 과일, 수량 한정",
+        pickupDate: "2026-04-28",
+        createdOrder: 2,
+        isFeatured: true,
+      },
+      {
+        id: 3,
+        category: "과일",
+        name: "스테비아 토마토",
+        price: 3900,
+        stock: 10,
+        image: "https://images.unsplash.com/photo-1546094096-0df4bcaaa337?q=80&w=1200&auto=format&fit=crop",
+        description: "과일처럼 달콤한 토마토",
+        pickupDate: "2026-04-28",
+        createdOrder: 3,
+        isFeatured: true,
+      }
+    ];
+
+    const state = {
+      products: JSON.parse(localStorage.getItem(STORAGE_KEY) || "null")?.products || initialProducts,
+      orders: JSON.parse(localStorage.getItem(STORAGE_KEY) || "null")?.orders || [],
+      currentAdminPassword: JSON.parse(localStorage.getItem(STORAGE_KEY) || "null")?.currentAdminPassword || "0000",
+      storeImage: JSON.parse(localStorage.getItem(STORAGE_KEY) || "null")?.storeImage || "",
+      activeMenu: "메인화면",
+      showAdmin: false,
+      newProductImage: "",
+      editProductImage: "",
+      selectedReservationPickup: PICKUP_OPTIONS[0],
+      selectedProductId: null,
+      editingProductId: null,
+      newFeatured: true,
+      editFeatured: true,
+    };
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        products: state.products,
+        orders: state.orders,
+        currentAdminPassword: state.currentAdminPassword,
+        storeImage: state.storeImage,
+      }));
+    }
+
+    function currency(value) {
+      return Number(value).toLocaleString("ko-KR") + "원";
+    }
+
+    function productsWithMeta() {
+      return state.products.map(product => {
+        const sold = state.orders
+          .filter(order => order.productId === product.id)
+          .reduce((sum, order) => sum + Number(order.quantity), 0);
+        const remaining = Math.max(Number(product.stock) - sold, 0);
+        return { ...product, sold, remaining, isSoldOut: remaining <= 0 };
+      });
+    }
+
+    function currentProducts() {
+      const all = productsWithMeta();
+      return all
+        .filter(product => state.activeMenu === "메인화면" ? true : product.category === state.activeMenu)
+        .sort((a, b) => b.createdOrder - a.createdOrder);
+    }
+
+    function renderBrandImage() {
+      const box = document.getElementById("brandImageBox");
+      if (state.storeImage) {
+        box.innerHTML = `<img src="${state.storeImage}" alt="매장 이미지" />`;
+      } else {
+        box.textContent = "매장 이미지";
+      }
+    }
+
+    function renderMenu() {
+      const menu = document.getElementById("menuPanel");
+      menu.innerHTML = "";
+      ["메인화면", ...MENU_ITEMS, "관리자"].forEach(item => {
+        const btn = document.createElement("button");
+        btn.textContent = item;
+        const isActive = item === "관리자" ? state.showAdmin : (!state.showAdmin && state.activeMenu === item);
+        if (isActive) btn.classList.add("active");
+        btn.onclick = () => {
+          menu.classList.remove("open");
+          if (item === "관리자") {
+            openModal("adminLoginModal");
+          } else {
+            state.showAdmin = false;
+            state.activeMenu = item;
+            render();
+          }
+        };
+        menu.appendChild(btn);
+      });
+    }
+
+    function renderHeroButtons() {
+      const box = document.getElementById("heroButtons");
+      box.innerHTML = "";
+      const allBtn = document.createElement("button");
+      allBtn.className = "button";
+      allBtn.textContent = "전체 상품 보기";
+      allBtn.onclick = () => { state.activeMenu = "메인화면"; state.showAdmin = false; render(); };
+      box.appendChild(allBtn);
+      MENU_ITEMS.forEach(item => {
+        const btn = document.createElement("button");
+        btn.className = "button";
+        btn.textContent = item + " 바로가기";
+        btn.onclick = () => { state.activeMenu = item; state.showAdmin = false; render(); };
+        box.appendChild(btn);
+      });
+    }
+
+    function renderAdminStats() {
+      const el = document.getElementById("adminStats");
+      if (!state.showAdmin) {
+        el.classList.add("hidden");
+        el.innerHTML = "";
+        return;
+      }
+      el.classList.remove("hidden");
+      const totalOrders = state.orders.length;
+      const totalQuantity = state.orders.reduce((sum, order) => sum + Number(order.quantity), 0);
+      el.innerHTML = `
+        <div class="card stat"><div class="stat-title">등록 상품</div><div class="stat-value">${state.products.length}</div></div>
+        <div class="card stat"><div class="stat-title">예약 건수</div><div class="stat-value">${totalOrders}</div></div>
+        <div class="card stat"><div class="stat-title">총 예약 수량</div><div class="stat-value">${totalQuantity}</div></div>
+      `;
+    }
+
+    function renderCustomerView() {
+      const products = currentProducts();
+      let html = `
+        <div class="section-title">${state.activeMenu}</div>
+        <p class="section-sub">선택한 메뉴에 맞는 상품만 표시됩니다. 메인화면에서는 전체 상품이 보여집니다.</p>
+      `;
+      if (products.length === 0) {
+        html += `<div class="card" style="padding:40px; margin-top:16px; text-align:center; color:#64748b;">이 메뉴에 등록된 상품이 아직 없습니다.</div>`;
+        return html;
+      }
+      html += `<div class="product-grid">`;
+      products.forEach(product => {
+        html += `
+          <div class="card product-card">
+            <img class="product-image" src="${product.image}" alt="${product.name}" />
+            <div class="product-body">
+              <div class="row">
+                <div>
+                  <h3>${product.name}</h3>
+                  <div class="price">${currency(product.price)}</div>
+                </div>
+                ${product.isSoldOut ? `<div class="dark-badge" style="background:#dc2626;">예약 마감</div>` : product.remaining <= 3 ? `<div class="dark-badge">마감 임박</div>` : ``}
+              </div>
+              <div class="small-badges">
+                <div class="outline-badge">${product.category}</div>
+                ${product.isFeatured ? `<div class="dark-badge">추천</div>` : ``}
+              </div>
+              <div class="desc">${product.description}</div>
+              ${product.pickupDate ? `<div class="pickup">픽업일: ${product.pickupDate}</div>` : ``}
+              <div class="stock-box"><span>남은 수량</span><strong>${product.remaining}개</strong></div>
+              ${product.isSoldOut ? `<div class="soldout"><strong>예약 마감되었습니다</strong><br/>다음 공구를 이용해주세요.</div>` : `<button class="button primary full" onclick="openReservation(${product.id})">예약하기</button>`}
+            </div>
+          </div>
+        `;
+      });
+      html += `</div>`;
+      return html;
+    }
+
+    function renderAdminView() {
+      const items = productsWithMeta();
+      const rows = state.orders.map(order => `
+        <tr>
+          <td>${order.productName}</td>
+          <td>${order.pickupDate || "-"}</td>
+          <td>${order.customerName}</td>
+          <td>${order.quantity}</td>
+          <td>${order.pickup}</td>
+          <td>${order.note || "-"}</td>
+          <td>${order.createdAt}</td>
+          <td><button class="ghost-icon" onclick="deleteOrder(${order.id})">✕</button></td>
+        </tr>
+      `).join("");
+      const productCards = items.map(product => `
+        <div class="card admin-card">
+          <div style="display:flex; justify-content:space-between; gap:8px; align-items:flex-start;">
+            <strong>${product.name}</strong>
+            <div class="outline-badge">${product.category}</div>
+          </div>
+          <p>총 재고 ${product.stock}개</p>
+          <p>예약 ${product.sold}개</p>
+          <p>픽업일 ${product.pickupDate || "미설정"}</p>
+          <p>남은 수량 ${product.remaining}개</p>
+          <p>메인화면 노출: ${product.isFeatured ? "노출" : "미노출"}</p>
+          <div class="admin-actions">
+            <button class="button" onclick="openEditProduct(${product.id})">수정</button>
+            <button class="button" onclick="deleteProduct(${product.id})">삭제</button>
+          </div>
+        </div>
+      `).join("");
+      return `
+        <div class="card table-card">
+          <h3 style="margin-bottom:16px;">예약자 목록</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>상품명</th>
+                <th>픽업일</th>
+                <th>예약번호 / 닉네임</th>
+                <th>수량</th>
+                <th>픽업시간</th>
+                <th>요청사항 및 보관 문의</th>
+                <th>예약시간</th>
+                <th>삭제</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rows || `<tr><td colspan="8" style="color:#64748b;">아직 예약 내역이 없습니다.</td></tr>`}
+            </tbody>
+          </table>
+        </div>
+        <div class="admin-grid">${productCards}</div>
+        <div class="card admin-card">
+          <h3>매장 이미지 설정</h3>
+          <div style="display:flex; gap:16px; align-items:center; flex-wrap:wrap; margin-top:16px;">
+            <div class="brand-image" style="width:96px;height:96px;">
+              ${state.storeImage ? `<img src="${state.storeImage}" alt="매장 이미지" />` : `이미지 없음`}
+            </div>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+              <button class="button" id="storeImageButton">매장 이미지 업로드</button>
+              <input type="file" id="storeImageInput" accept="image/*" class="hidden" />
+              ${state.storeImage ? `<button class="button" onclick="removeStoreImage()">이미지 제거</button>` : ``}
+            </div>
+          </div>
+        </div>
+        <div class="card admin-card">
+          <h3>관리자번호 변경</h3>
+          <div class="form-grid" style="margin-top:16px;">
+            <div class="field">
+              <label>새 관리자번호</label>
+              <input type="password" id="newAdminPassword" placeholder="새 관리자번호 입력" value="${escapeHtml(document.getElementById('newAdminPassword')?.value || '')}" />
+            </div>
+            <div class="field">
+              <label>새 관리자번호 확인</label>
+              <input type="password" id="newAdminPasswordConfirm" placeholder="한 번 더 입력" value="${escapeHtml(document.getElementById('newAdminPasswordConfirm')?.value || '')}" />
+            </div>
+          </div>
+          <div class="modal-actions"><button class="button primary" onclick="changeAdminPassword()">관리자번호 변경</button></div>
+        </div>
+      `;
+    }
+
+    function render() {
+      renderBrandImage();
+      renderMenu();
+      renderHeroButtons();
+      renderAdminStats();
+
+      document.getElementById("addProductBtn").classList.toggle("hidden", !state.showAdmin);
+      document.getElementById("logoutAdminBtn").classList.toggle("hidden", !state.showAdmin);
+
+      const content = document.getElementById("content");
+      content.innerHTML = state.showAdmin ? renderAdminView() : renderCustomerView();
+
+      const storeButton = document.getElementById("storeImageButton");
+      const storeInput = document.getElementById("storeImageInput");
+      if (storeButton && storeInput) {
+        storeButton.onclick = () => storeInput.click();
+        storeInput.onchange = (e) => {
+          const file = e.target.files?.[0];
+          if (!file) return;
+          fileToDataUrl(file, (result) => {
+            state.storeImage = result;
+            saveState();
+            render();
+          });
+        };
+      }
+    }
+
+    function openModal(id) {
+      document.getElementById(id).classList.add("open");
+    }
+    function closeModal(id) {
+      document.getElementById(id).classList.remove("open");
+    }
+    window.closeModal = closeModal;
+
+    function fileToDataUrl(file, callback) {
+      const reader = new FileReader();
+      reader.onload = () => callback(typeof reader.result === "string" ? reader.result : "");
+      reader.readAsDataURL(file);
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#039;');
+    }
+
+    document.getElementById("menuToggle").onclick = () => {
+      document.getElementById("menuPanel").classList.toggle("open");
+    };
+
+    document.getElementById("confirmAdminLoginBtn").onclick = () => {
+      const value = document.getElementById("adminPasswordInput").value;
+      if (value === state.currentAdminPassword) {
+        state.showAdmin = true;
+        document.getElementById("adminPasswordInput").value = "";
+        document.getElementById("adminError").textContent = "";
+        closeModal("adminLoginModal");
+        render();
+      } else {
+        document.getElementById("adminError").textContent = "관리자번호가 올바르지 않습니다.";
+      }
+    };
+
+    document.getElementById("addProductBtn").onclick = () => openModal("addProductModal");
+    document.getElementById("logoutAdminBtn").onclick = () => {
+      state.showAdmin = false;
+      render();
+    };
+
+    MENU_ITEMS.forEach(item => {
+      const opt1 = document.createElement("option");
+      opt1.value = item;
+      opt1.textContent = item;
+      document.getElementById("newCategory").appendChild(opt1);
+
+      const opt2 = document.createElement("option");
+      opt2.value = item;
+      opt2.textContent = item;
+      document.getElementById("editCategory").appendChild(opt2);
+    });
+
+    document.getElementById("newImageButton").onclick = () => document.getElementById("newImageInput").click();
+    document.getElementById("newImageInput").onchange = (e) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      fileToDataUrl(file, (result) => {
+        state.newProductImage = result;
+        const preview = document.getElementById("newImagePreview");
+        preview.src = result;
+        preview.classList.remove("hidden");
+      });
+    };
+
+    document.getElementById("newFeaturedYes").onclick = () => {
+      state.newFeatured = true;
+      document.getElementById("newFeaturedYes").classList.add("primary");
+      document.getElementById("newFeaturedNo").classList.remove("primary");
+    };
+    document.getElementById("newFeaturedNo").onclick = () => {
+      state.newFeatured = false;
+      document.getElementById("newFeaturedNo").classList.add("primary");
+      document.getElementById("newFeaturedYes").classList.remove("primary");
+    };
+
+    document.getElementById("saveNewProductBtn").onclick = () => {
+      const name = document.getElementById("newName").value.trim();
+      const price = Number(document.getElementById("newPrice").value);
+      const stock = Number(document.getElementById("newStock").value || 1);
+      const category = document.getElementById("newCategory").value;
+      const description = document.getElementById("newDescription").value.trim();
+      const pickupDate = document.getElementById("newPickupDate").value;
+
+      if (!name) return alert("상품명을 입력해주세요.");
+      if (price <= 0) return alert("가격을 입력해주세요.");
+      if (!pickupDate) return alert("픽업일을 선택해주세요.");
+
+      const createdOrder = state.products.length ? Math.max(...state.products.map(p => p.createdOrder)) + 1 : 1;
+      state.products.unshift({
+        id: Date.now(),
+        category,
+        name,
+        price,
+        stock,
+        image: state.newProductImage || "https://images.unsplash.com/photo-1542838132-92c53300491e?q=80&w=1200&auto=format&fit=crop",
+        description,
+        pickupDate,
+        createdOrder,
+        isFeatured: state.newFeatured,
+      });
+      state.activeMenu = category;
+      saveState();
+      state.newProductImage = "";
+      document.getElementById("newName").value = "";
+      document.getElementById("newPrice").value = "";
+      document.getElementById("newStock").value = 1;
+      document.getElementById("newDescription").value = "";
+      document.getElementById("newPickupDate").value = "";
+      document.getElementById("newImagePreview").classList.add("hidden");
+      closeModal("addProductModal");
+      render();
+      alert("신규 상품이 추가되었습니다.");
+    };
+
+    window.openEditProduct = (id) => {
+      const product = state.products.find(p => p.id === id);
+      if (!product) return;
+      state.editingProductId = id;
+      state.editProductImage = product.image;
+      document.getElementById("editCategory").value = product.category;
+      document.getElementById("editName").value = product.name;
+      document.getElementById("editPrice").value = product.price;
+      document.getElementById("editStock").value = product.stock;
+      document.getElementById("editPickupDate").value = product.pickupDate || "";
+      document.getElementById("editDescription").value = product.description || "";
+      const preview = document.getElementById("editImagePreview");
+      preview.src = product.image;
+      preview.classList.remove("hidden");
+      state.editFeatured = !!product.isFeatured;
+      document.getElementById("editFeaturedYes").classList.toggle("primary", state.editFeatured);
+      document.getElementById("editFeaturedNo").classList.toggle("primary", !state.editFeatured);
+      openModal("editProductModal");
+    };
+
+    document.getElementById("editImageButton").onclick = () => document.getElementById("editImageInput").click();
+    document.getElementById("editImageInput").onchange = (e) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      fileToDataUrl(file, (result) => {
+        state.editProductImage = result;
+        const preview = document.getElementById("editImagePreview");
+        preview.src = result;
+        preview.classList.remove("hidden");
+      });
+    };
+
+    document.getElementById("editFeaturedYes").onclick = () => {
+      state.editFeatured = true;
+      document.getElementById("editFeaturedYes").classList.add("primary");
+      document.getElementById("editFeaturedNo").classList.remove("primary");
+    };
+    document.getElementById("editFeaturedNo").onclick = () => {
+      state.editFeatured = false;
+      document.getElementById("editFeaturedNo").classList.add("primary");
+      document.getElementById("editFeaturedYes").classList.remove("primary");
+    };
+
+    document.getElementById("saveEditedProductBtn").onclick = () => {
+      const id = state.editingProductId;
+      const product = state.products.find(p => p.id === id);
+      if (!product) return;
+      const name = document.getElementById("editName").value.trim();
+      const pickupDate = document.getElementById("editPickupDate").value;
+      if (!name) return alert("상품명을 입력해주세요.");
+      if (!pickupDate) return alert("픽업일을 선택해주세요.");
+      product.category = document.getElementById("editCategory").value;
+      product.name = name;
+      product.price = Number(document.getElementById("editPrice").value || 0);
+      product.stock = Number(document.getElementById("editStock").value || 0);
+      product.pickupDate = pickupDate;
+      product.description = document.getElementById("editDescription").value.trim();
+      product.image = state.editProductImage || product.image;
+      product.isFeatured = state.editFeatured;
+      saveState();
+      closeModal("editProductModal");
+      render();
+      alert("상품이 수정되었습니다.");
+    };
+
+    window.deleteProduct = (id) => {
+      if (!confirm("이 상품을 삭제할까요?")) return;
+      state.products = state.products.filter(p => p.id !== id);
+      saveState();
+      render();
+    };
+
+    window.openReservation = (id) => {
+      const product = productsWithMeta().find(p => p.id === id);
+      if (!product || product.isSoldOut) return;
+      state.selectedProductId = id;
+      state.selectedReservationPickup = PICKUP_OPTIONS[0];
+      document.getElementById("reservationProductName").textContent = product.name;
+      document.getElementById("reservationProductPrice").textContent = currency(product.price);
+      document.getElementById("reservationRemaining").textContent = `남은 수량 ${product.remaining}개`;
+      document.getElementById("reservationPickupDate").textContent = product.pickupDate ? `픽업일: ${product.pickupDate}` : "";
+      document.getElementById("reservationNickname").value = "";
+      document.getElementById("reservationQuantity").value = 1;
+      document.getElementById("reservationNote").value = "";
+      const box = document.getElementById("pickupButtons");
+      box.innerHTML = "";
+      PICKUP_OPTIONS.forEach(option => {
+        const btn = document.createElement("button");
+        btn.className = "button" + (option === state.selectedReservationPickup ? " primary" : "");
+        btn.textContent = option;
+        btn.onclick = () => {
+          state.selectedReservationPickup = option;
+          Array.from(box.children).forEach(c => c.classList.remove("primary"));
+          btn.classList.add("primary");
+        };
+        box.appendChild(btn);
+      });
+      openModal("reservationModal");
+    };
+
+    document.getElementById("confirmReservationBtn").onclick = () => {
+      const nickname = document.getElementById("reservationNickname").value.trim();
+      const quantity = Number(document.getElementById("reservationQuantity").value || 1);
+      const note = document.getElementById("reservationNote").value.trim();
+      const product = productsWithMeta().find(p => p.id === state.selectedProductId);
+      if (!product) return;
+      if (!nickname) return alert("예약번호 4자리 또는 닉네임을 입력해주세요.");
+      if (quantity < 1) return alert("수량은 1개 이상이어야 합니다.");
+      if (quantity > product.remaining) return alert(`남은 수량은 ${product.remaining}개입니다.`);
+      state.orders.unshift({
+        id: Date.now(),
+        productId: product.id,
+        productName: product.name,
+        pickupDate: product.pickupDate,
+        customerName: nickname,
+        quantity,
+        pickup: state.selectedReservationPickup,
+        note,
+        createdAt: new Date().toLocaleString("ko-KR"),
+      });
+      saveState();
+      closeModal("reservationModal");
+      render();
+      alert("예약이 완료되었습니다.");
+    };
+
+    window.deleteOrder = (id) => {
+      if (!confirm("이 예약을 삭제할까요?")) return;
+      state.orders = state.orders.filter(order => order.id !== id);
+      saveState();
+      render();
+    };
+
+    window.removeStoreImage = () => {
+      state.storeImage = "";
+      saveState();
+      render();
+    };
+
+    window.changeAdminPassword = () => {
+      const next = document.getElementById("newAdminPassword").value.trim();
+      const confirmValue = document.getElementById("newAdminPasswordConfirm").value.trim();
+      if (!next || !confirmValue) return alert("새 관리자번호를 입력해주세요.");
+      if (next !== confirmValue) return alert("새 관리자번호가 서로 일치하지 않습니다.");
+      state.currentAdminPassword = next;
+      saveState();
+      render();
+      alert("관리자번호가 변경되었습니다.");
+    };
+
+    render();
+  </script>
+</body>
+</html>
