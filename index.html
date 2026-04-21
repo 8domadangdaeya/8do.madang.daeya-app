@@ -480,13 +480,12 @@ async function loadProductsFromSupabase() {
 
   if (error) {
     console.error("상품 불러오기 실패:", error);
+    state.products = [];
+    render();
     return;
   }
 
-  if (data) {
-    state.products = data.map(mapProductFromDb);
-  }
-
+  state.products = (data || []).map(mapProductFromDb);
   render();
 }
 
@@ -513,44 +512,7 @@ async function loadOrdersFromSupabase() {
     ];
     const STORAGE_KEY = "paldomadang-html-app-v1";
 
-    const initialProducts = [
-      {
-        id: 1,
-        category: "공동구매 상품",
-        name: "꿀맛 신고배",
-        price: 5900,
-        stock: 5,
-        image: "https://images.unsplash.com/photo-1568702846914-96b305d2aaeb?q=80&w=1200&auto=format&fit=crop",
-        description: "달콤한 과즙 가득! 당일 픽업 특가 상품",
-        pickupDate: "2026-04-28",
-        createdOrder: 1,
-        isFeatured: true,
-      },
-      {
-        id: 2,
-        category: "과일",
-        name: "제스프리 골드키위",
-        price: 8900,
-        stock: 8,
-        image: "https://images.unsplash.com/photo-1619566636858-adf3ef46400b?q=80&w=1200&auto=format&fit=crop",
-        description: "상큼달콤한 인기 과일, 수량 한정",
-        pickupDate: "2026-04-28",
-        createdOrder: 2,
-        isFeatured: true,
-      },
-      {
-        id: 3,
-        category: "과일",
-        name: "스테비아 토마토",
-        price: 3900,
-        stock: 10,
-        image: "https://images.unsplash.com/photo-1546094096-0df4bcaaa337?q=80&w=1200&auto=format&fit=crop",
-        description: "과일처럼 달콤한 토마토",
-        pickupDate: "2026-04-28",
-        createdOrder: 3,
-        isFeatured: true,
-      }
-    ];
+const initialProducts = [];
 
     const state = {
 products: initialProducts,
