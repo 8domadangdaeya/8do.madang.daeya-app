@@ -483,10 +483,11 @@ async function loadProductsFromSupabase() {
     return;
   }
 
-  if (data && data.length > 0) {
+  if (data) {
     state.products = data.map(mapProductFromDb);
-    render();
   }
+
+  render();
 }
 
 async function loadOrdersFromSupabase() {
