@@ -441,7 +441,68 @@
 const SUPABASE_KEY = "sb_publishable_kMPKpoUOhTvuE5KXvvWEiA_3HfVK-Au";
 
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+function mapProductFromDb(row) {
+  return {
+    id: row.id,
+    category: row.category,
+    name: row.name,
+    price: row.price,
+    stock: row.stock,
+    image: row.image || "",
+    description: row.description || "",
+    pickupDate: row.pickup_date || "",
+    createdOrder: row.created_order || 0,
+    isFeatured: row.is_featured ?? true,
+  };
+}
 
+function mapOrderFromDb(row) {
+  return {
+    id: row.id,
+    productId: row.product_id,
+    productName: row.product_name,
+    pickupDate: row.pickup_date || "",
+    customerName: row.customer_name,
+    quantity: row.quantity,
+    pickup: row.pickup,
+    note: row.note || "",
+    createdAt: row.created_at
+      ? new Date(row.created_at).toLocaleString("ko-KR")
+      : "",
+  };
+}
+
+async function loadProductsFromSupabase() {
+  const { data, error } = await sb
+    .from("products")
+    .select("*")
+    .order("created_order", { ascending: false });
+
+  if (error) {
+    console.error("상품 불러오기 실패:", error);
+    return;
+  }
+
+  if (data && data.length > 0) {
+    state.products = data.map(mapProductFromDb);
+    render();
+  }
+}
+
+async function loadOrdersFromSupabase() {
+  const { data, error } = await sb
+    .from("orders")
+    .select("*")
+    .order("id", { ascending: false });
+
+  if (error) {
+    console.error("예약 불러오기 실패:", error);
+    return;
+  }
+
+  state.orders = (data || []).map(mapOrderFromDb);
+  render();
+}
     const MENU_ITEMS = ["공동구매 상품", "과일", "야채", "정육"];
     const PICKUP_OPTIONS = [
       "10:00", "10:30", "11:00", "11:30", "12:00",
@@ -491,8 +552,8 @@ const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
     ];
 
     const state = {
-      products: JSON.parse(localStorage.getItem(STORAGE_KEY) || "null")?.products || initialProducts,
-      orders: JSON.parse(localStorage.getItem(STORAGE_KEY) || "null")?.orders || [],
+products: initialProducts,
+orders: [],
       currentAdminPassword: JSON.parse(localStorage.getItem(STORAGE_KEY) || "null")?.currentAdminPassword || "0000",
       storeImage: JSON.parse(localStorage.getItem(STORAGE_KEY) || "null")?.storeImage || "",
       activeMenu: "메인화면",
@@ -1044,6 +1105,8 @@ async function saveState() {
     };
 
     render();
+    loadProductsFromSupabase();
+loadOrdersFromSupabase();
   </script>
 </body>
 </html>
