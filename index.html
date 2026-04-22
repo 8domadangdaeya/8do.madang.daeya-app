@@ -680,6 +680,19 @@ const recentOrders = [...state.orders]
   .slice(0, 10);
 
 const rows = recentOrders.map(order => `
+  <tr>
+    <td>${order.productName}</td>
+    <td>${order.pickupDate || "-"}</td>
+    <td>${order.customerName}</td>
+    <td>${order.quantity}</td>
+    <td>${order.pickup}</td>
+    <td>${order.note || "-"}</td>
+    <td>${order.createdAt}</td>
+    <td>
+      <button class="ghost-icon" onclick="deleteOrder(${order.id})">X</button>
+    </td>
+  </tr>
+`).join("");
 const ordersTable = `
   <div class="card" style="margin-top:16px;">
     <h3 style="margin-bottom:12px;">예약 목록 (최신 10건)</h3>
@@ -697,7 +710,7 @@ const ordersTable = `
         </tr>
       </thead>
       <tbody>
-        ${rows || `<tr><td colspan="8" style="text-align:center;">예약 없음</td></tr>`}
+        ${rows || '<tr><td colspan="8" style="text-align:center;">예약 없음</td></tr>'}
       </tbody>
     </table>
   </div>
