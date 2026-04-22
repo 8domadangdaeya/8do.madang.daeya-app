@@ -715,17 +715,6 @@ const ordersTable = `
     </table>
   </div>
 `;
-        <tr>
-          <td>${order.productName}</td>
-          <td>${order.pickupDate || "-"}</td>
-          <td>${order.customerName}</td>
-          <td>${order.quantity}</td>
-          <td>${order.pickup}</td>
-          <td>${order.note || "-"}</td>
-          <td>${order.createdAt}</td>
-          <td><button class="ghost-icon" onclick="deleteOrder(${order.id})">✕</button></td>
-        </tr>
-      `).join("");
 const productCards = items.map(product => `
   <div class="card admin-card">
     <div style="display:flex; justify-content:space-between;">
