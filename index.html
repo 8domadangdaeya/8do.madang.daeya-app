@@ -733,12 +733,13 @@ const productsSection = `
     ${productCards}
   </div>
 `;
-      return `
-        <div class="section-title">관리자 모드</div>
+return `
+  <div class="section-title">관리자 모드</div>
   ${adminTabs}
   ${state.adminTab === "products" ? productsSection : ordersTable}
 `;
-
+}
+    
     function render() {
       renderBrandImage();
       renderMenu();
