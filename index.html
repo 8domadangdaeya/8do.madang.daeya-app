@@ -521,6 +521,7 @@ orders: [],
       storeImage: JSON.parse(localStorage.getItem(STORAGE_KEY) || "null")?.storeImage || "",
       activeMenu: "메인화면",
       showAdmin: false,
+      adminTab: "products",
       newProductImage: "",
       editProductImage: "",
       selectedReservationPickup: PICKUP_OPTIONS[0],
@@ -668,7 +669,39 @@ ${product.isSoldOut
 
     function renderAdminView() {
       const items = productsWithMeta();
-      const rows = state.orders.map(order => `
+      const adminTabs = `
+  <div class="row" style="gap:8px; margin:16px 0;">
+    <button class="button ${state.adminTab === "products" ? "primary" : ""}" onclick="switchAdminTab('products')">상품 관리</button>
+    <button class="button ${state.adminTab === "orders" ? "primary" : ""}" onclick="switchAdminTab('orders')">예약 관리</button>
+  </div>
+`;
+const recentOrders = [...state.orders]
+  .sort((a, b) => b.id - a.id)
+  .slice(0, 10);
+
+const rows = recentOrders.map(order => `
+const ordersTable = `
+  <div class="card" style="margin-top:16px;">
+    <h3 style="margin-bottom:12px;">예약 목록 (최신 10건)</h3>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>상품명</th>
+          <th>픽업일</th>
+          <th>예약자</th>
+          <th>수량</th>
+          <th>시간</th>
+          <th>요청</th>
+          <th>등록</th>
+          <th>삭제</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${rows || `<tr><td colspan="8" style="text-align:center;">예약 없음</td></tr>`}
+      </tbody>
+    </table>
+  </div>
+`;
         <tr>
           <td>${order.productName}</td>
           <td>${order.pickupDate || "-"}</td>
@@ -680,74 +713,29 @@ ${product.isSoldOut
           <td><button class="ghost-icon" onclick="deleteOrder(${order.id})">✕</button></td>
         </tr>
       `).join("");
-      const productCards = items.map(product => `
-        <div class="card admin-card">
-          <div style="display:flex; justify-content:space-between; gap:8px; align-items:flex-start;">
-            <strong>${product.name}</strong>
-            <div class="outline-badge">${product.category}</div>
-          </div>
-          <p>총 재고 ${product.stock}개</p>
-          <p>예약 ${product.sold}개</p>
-          <p>픽업일 ${product.pickupDate || "미설정"}</p>
-          <p>남은 수량 ${product.remaining}개</p>
-          <p>메인화면 노출: ${product.isFeatured ? "노출" : "미노출"}</p>
-          <div class="admin-actions">
-            <button class="button" onclick="openEditProduct(${product.id})">수정</button>
-            <button class="button" onclick="deleteProduct(${product.id})">삭제</button>
-          </div>
-        </div>
-      `).join("");
+const productCards = items.map(product => `
+  <div class="card admin-card">
+    <div style="display:flex; justify-content:space-between;">
+      <strong>${product.name}</strong>
+      <div class="outline-badge">${product.category}</div>
+    </div>
+    <p>재고 ${product.stock}개</p>
+    <p>예약 ${product.sold}개</p>
+    <p>픽업일 ${product.pickupDate || "미설정"}</p>
+    <p>남은 수량 ${product.remaining}개</p>
+  </div>
+`).join("");
+
+const productsSection = `
+  <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px;">
+    ${productCards}
+  </div>
+`;
       return `
-        <div class="card table-card">
-          <h3 style="margin-bottom:16px;">예약자 목록</h3>
-          <table>
-            <thead>
-              <tr>
-                <th>상품명</th>
-                <th>픽업일</th>
-                <th>예약번호 / 닉네임</th>
-                <th>수량</th>
-                <th>픽업시간</th>
-                <th>요청사항 및 보관 문의</th>
-                <th>예약시간</th>
-                <th>삭제</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${rows || `<tr><td colspan="8" style="color:#64748b;">아직 예약 내역이 없습니다.</td></tr>`}
-            </tbody>
-          </table>
-        </div>
-        <div class="admin-grid">${productCards}</div>
-        <div class="card admin-card">
-          <h3>매장 이미지 설정</h3>
-          <div style="display:flex; gap:16px; align-items:center; flex-wrap:wrap; margin-top:16px;">
-            <div class="brand-image" style="width:96px;height:96px;">
-              ${state.storeImage ? `<img src="${state.storeImage}" alt="매장 이미지" />` : `이미지 없음`}
-            </div>
-            <div style="display:flex; gap:8px; flex-wrap:wrap;">
-              <button class="button" id="storeImageButton">매장 이미지 업로드</button>
-              <input type="file" id="storeImageInput" accept="image/*" class="hidden" />
-              ${state.storeImage ? `<button class="button" onclick="removeStoreImage()">이미지 제거</button>` : ``}
-            </div>
-          </div>
-        </div>
-        <div class="card admin-card">
-          <h3>관리자번호 변경</h3>
-          <div class="form-grid" style="margin-top:16px;">
-            <div class="field">
-              <label>새 관리자번호</label>
-              <input type="password" id="newAdminPassword" placeholder="새 관리자번호 입력" value="${escapeHtml(document.getElementById('newAdminPassword')?.value || '')}" />
-            </div>
-            <div class="field">
-              <label>새 관리자번호 확인</label>
-              <input type="password" id="newAdminPasswordConfirm" placeholder="한 번 더 입력" value="${escapeHtml(document.getElementById('newAdminPasswordConfirm')?.value || '')}" />
-            </div>
-          </div>
-          <div class="modal-actions"><button class="button primary" onclick="changeAdminPassword()">관리자번호 변경</button></div>
-        </div>
-      `;
-    }
+        <div class="section-title">관리자 모드</div>
+  ${adminTabs}
+  ${state.adminTab === "products" ? productsSection : ordersTable}
+`;
 
     function render() {
       renderBrandImage();
@@ -1052,13 +1040,23 @@ window.deleteProduct = async (id) => {
       alert("예약이 완료되었습니다.");
     };
 
-    window.deleteOrder = (id) => {
-      if (!confirm("이 예약을 삭제할까요?")) return;
-      state.orders = state.orders.filter(order => order.id !== id);
-      saveState();
-      render();
-    };
+   window.deleteOrder = async (id) => {
+  if (!confirm("이 예약을 삭제할까요?")) return;
 
+  const { error } = await sb
+    .from("orders")
+    .delete()
+    .eq("id", id);
+
+  if (error) {
+    console.error("예약 삭제 실패:", error);
+    alert("예약 삭제 실패");
+    return;
+  }
+
+  state.orders = state.orders.filter(o => o.id !== id);
+  render();
+};
     window.removeStoreImage = () => {
       state.storeImage = "";
       saveState();
