@@ -644,7 +644,11 @@ function saveState() {
                   <h3>${product.name}</h3>
                   <div class="price">${currency(product.price)}</div>
                 </div>
-                ${product.isSoldOut ? `<div class="dark-badge" style="background:#dc2626;">예약 마감</div>` : product.remaining <= 3 ? `<div class="dark-badge">마감 임박</div>` : ``}
+${product.isSoldOut 
+  ? `<div class="dark-badge" style="background:#dc2626;">예약 마감</div>` 
+  : product.remaining <= 3 
+    ? `<div class="dark-badge">마감 임박</div>` 
+    : ''}
               </div>
               <div class="small-badges">
                 <div class="outline-badge">${product.category}</div>
