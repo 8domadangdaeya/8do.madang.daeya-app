@@ -669,13 +669,13 @@ ${product.isSoldOut
 
     function renderAdminView() {
       const items = productsWithMeta();
-      const adminTabs = `
+const adminTabs = `
   <div class="row" style="gap:8px; margin:16px 0;">
     <button class="button ${state.adminTab === "products" ? "primary" : ""}" onclick="switchAdminTab('products')">상품 관리</button>
     <button class="button ${state.adminTab === "orders" ? "primary" : ""}" onclick="switchAdminTab('orders')">예약 관리</button>
   </div>
 `;
-const recentOrders = [...state.orders]
+      const recentOrders = [...state.orders]
   .sort((a, b) => b.id - a.id)
   .slice(0, 10);
 
@@ -776,6 +776,12 @@ return `
     }
     window.closeModal = closeModal;
 
+    window.switchAdminTab = (tab) => {
+  state.adminTab = tab;
+  render();
+};
+
+window.deleteProduct = async (id) => {
     function fileToDataUrl(file, callback) {
       const reader = new FileReader();
       reader.onload = () => callback(typeof reader.result === "string" ? reader.result : "");
