@@ -782,11 +782,22 @@ return `
 };
 
 window.deleteProduct = async (id) => {
-    function fileToDataUrl(file, callback) {
-      const reader = new FileReader();
-      reader.onload = () => callback(typeof reader.result === "string" ? reader.result : "");
-      reader.readAsDataURL(file);
-    }
+  if (!confirm("이 상품을 삭제할까요?")) return;
+
+  const { error } = await sb
+    .from("products")
+    .delete()
+    .eq("id", id);
+
+  if (error) {
+    console.error("상품 삭제 실패:", error);
+    alert("상품 삭제에 실패했습니다.");
+    return;
+  }
+
+  state.products = state.products.filter(p => p.id !== id);
+  render();
+};
 
     function escapeHtml(value) {
       return String(value)
