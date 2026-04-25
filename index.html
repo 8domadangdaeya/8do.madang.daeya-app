@@ -1034,32 +1034,39 @@ window.deleteProduct = async (id) => {
       openModal("reservationModal");
     };
 
-    document.getElementById("confirmReservationBtn").onclick = () => {
-      const nickname = document.getElementById("reservationNickname").value.trim();
-      const quantity = Number(document.getElementById("reservationQuantity").value || 1);
-      const note = document.getElementById("reservationNote").value.trim();
-      const product = productsWithMeta().find(p => p.id === state.selectedProductId);
-      if (!product) return;
-      if (!nickname) return alert("예약번호 4자리 또는 닉네임을 입력해주세요.");
-      if (quantity < 1) return alert("수량은 1개 이상이어야 합니다.");
-      if (quantity > product.remaining) return alert(`남은 수량은 ${product.remaining}개입니다.`);
-      state.orders.unshift({
-        id: Date.now(),
-        productId: product.id,
-        productName: product.name,
-        pickupDate: product.pickupDate,
-        customerName: nickname,
-        quantity,
-        pickup: state.selectedReservationPickup,
-        note,
-        createdAt: new Date().toLocaleString("ko-KR"),
-      });
-      saveState();
-      closeModal("reservationModal");
-      render();
-      alert("예약이 완료되었습니다.");
-    };
+document.getElementById("confirmReservationBtn").onclick = async () => {
+  const nickname = document.getElementById("reservationNickname").value.trim();
+  const quantity = Number(document.getElementById("reservationQuantity").value || 1);
+  const note = document.getElementById("reservationNote").value.trim();
+  const product = productsWithMeta().find(p => p.id === state.selectedProductId);
 
+  if (!product) return;
+  if (!nickname) return alert("예약번호 4자리 또는 닉네임을 입력해주세요.");
+  if (quantity < 1) return alert("수량은 1개 이상이어야 합니다.");
+  if (quantity > product.remaining) return alert(`남은 수량은 ${product.remaining}개입니다.`);
+
+  const { error } = await sb.from("orders").insert({
+    product_id: product.id,
+    product_name: product.name,
+    pickup_date: product.pickupDate,
+    customer_name: nickname,
+    quantity: quantity,
+    pickup: state.selectedReservationPickup,
+    note: note,
+  });
+
+  if (error) {
+    console.error("예약 저장 실패:", error);
+    alert("예약 저장에 실패했습니다.");
+    return;
+  }
+
+  await loadOrdersFromSupabase();
+
+  closeModal("reservationModal");
+  render();
+  alert("예약이 완료되었습니다.");
+};
    window.deleteOrder = async (id) => {
   if (!confirm("이 예약을 삭제할까요?")) return;
 
