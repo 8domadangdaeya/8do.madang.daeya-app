@@ -493,7 +493,7 @@ async function loadOrdersFromSupabase() {
   const { data, error } = await sb
     .from("orders")
     .select("*")
-.order("created_at", { ascending: false })
+.order("id", { ascending: false })
 
   if (error) {
     console.error("예약 불러오기 실패:", error);
