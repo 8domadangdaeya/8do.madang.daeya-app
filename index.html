@@ -729,16 +729,21 @@ const productCards = items.map(product => `
 `).join("");
 
 const productsSection = `
-  <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:16px;">
+  <div style="margin:12px 0 20px;">
+    <button class="button" id="storeImageButton">매장 이미지 업로드</button>
+    <input type="file" id="storeImageInput" accept="image/*" class="hidden" />
+  </div>
+
+  <div class="grid" ...>
     ${productCards}
   </div>
 `;
 return `
   <div class="section-title">관리자 모드</div>
+
   ${adminTabs}
   ${state.adminTab === "products" ? productsSection : ordersTable}
 `;
-}
     
     function render() {
       renderBrandImage();
