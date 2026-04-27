@@ -705,12 +705,23 @@ function renderAdminView() {
     </div>
   `;
 
-  const productCards = items.map(product => `
-    <div class="card">
+const productCards = items.map(product => `
+  <div class="card admin-card">
+    <div style="display:flex; justify-content:space-between; gap:8px; align-items:flex-start;">
       <strong>${product.name}</strong>
-      <p>재고 ${product.stock}</p>
+      <div class="outline-badge">${product.category}</div>
     </div>
-  `).join("");
+    <p>총 재고 ${product.stock}개</p>
+    <p>예약 ${product.sold}개</p>
+    <p>픽업일 ${product.pickupDate || "미설정"}</p>
+    <p>남은 수량 ${product.remaining}개</p>
+    <p>메인화면 노출: ${product.isFeatured ? "노출" : "미노출"}</p>
+    <div class="admin-actions">
+      <button class="button" onclick="openEditProduct(${product.id})">수정</button>
+      <button class="button" onclick="deleteProduct(${product.id})">삭제</button>
+    </div>
+  </div>
+`).join("");
 
   const productsSection = `
     <div style="margin:12px 0 20px;">
