@@ -764,15 +764,63 @@ storeInput.onchange = async (e) => {
   const url = await uploadStoreImageToSupabase(file);
   if (!url) return;
 
-await sb.from("settings").upsert({
-  key: "storeImage",
-  value: url
-});
+const { data, error } = await sb
+  .from("settings")
+  .upsert(
+    { key: "storeImage", value: url },
+    { onConflict: "key" }
+  )
+  .select()
+  .single();
 
-state.storeImage = url;
+if (error) {
+  console.error("DB 저장 실패:", error);
+  alert("저장 실패");
+  return;
+}
+
+state.storeImage = data.value;
 render();
 };
+async function loadStoreImage() {
+  const { data, error } = await sb
+    .from("settings")
+    .select("*")
+    .eq("key", "storeImage")
+    .maybeSingle();
 
+  if (error) {
+    console.error("매장 이미지 불러오기 실패:", error);
+    return;
+  }
+
+  if (data) {
+    state.storeImage = data.value;
+  }
+
+  render();
+}
+
+async function uploadStoreImageToSupabase(file) {
+  const fileExt = file.name.split(".").pop();
+  const fileName = `store-${Date.now()}.${fileExt}`;
+
+  const { error } = await sb.storage
+    .from("store-images")
+    .upload(fileName, file, { upsert: true });
+
+  if (error) {
+    console.error("매장 이미지 업로드 실패:", error);
+    alert("업로드 실패");
+    return "";
+  }
+
+  const { data } = sb.storage
+    .from("store-images")
+    .getPublicUrl(fileName);
+
+  return data.publicUrl;
+}
 async function loadStoreImage() {
   const { data, error } = await sb
     .from("settings")
@@ -1146,6 +1194,8 @@ async function uploadStoreImageToSupabase(file) {
 loadProductsFromSupabase();
 loadOrdersFromSupabase();
 loadStoreImage();
-  </script>
+</script>
+</body>
+</html>
 </body>
 </html>
