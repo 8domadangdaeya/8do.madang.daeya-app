@@ -767,7 +767,7 @@ async function loadStoreImage() {
     .from("settings")
     .select("*")
     .eq("key", "storeImage")
-    .single();
+    .maybeSingle();
 
   if (data) {
     state.storeImage = data.value;
