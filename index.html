@@ -821,21 +821,6 @@ async function uploadStoreImageToSupabase(file) {
 
   return data.publicUrl;
 }
-async function loadStoreImage() {
-  const { data, error } = await sb
-    .from("settings")
-    .select("*")
-    .eq("key", "storeImage")
-    .maybeSingle();
-
-  if (data) {
-    state.storeImage = data.value;
-  }
-
-  render();
-}
-      }
-    }
 
     function openModal(id) {
       document.getElementById(id).classList.add("open");
