@@ -753,10 +753,28 @@ storeInput.onchange = async (e) => {
   const url = await uploadStoreImageToSupabase(file);
   if (!url) return;
 
-  state.storeImage = url;
-  saveState();
-  render();
+await sb.from("settings").upsert({
+  key: "storeImage",
+  value: url
+});
+
+state.storeImage = url;
+render();
 };
+
+async function loadStoreImage() {
+  const { data, error } = await sb
+    .from("settings")
+    .select("*")
+    .eq("key", "storeImage")
+    .single();
+
+  if (data) {
+    state.storeImage = data.value;
+  }
+
+  render();
+}
       }
     }
 
@@ -1116,6 +1134,7 @@ async function uploadStoreImageToSupabase(file) {
     
 loadProductsFromSupabase();
 loadOrdersFromSupabase();
+loadStoreImage();
   </script>
 </body>
 </html>
