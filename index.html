@@ -1153,34 +1153,11 @@ document.getElementById("confirmReservationBtn").onclick = async () => {
       saveState();
       render();
       alert("관리자번호가 변경되었습니다.");
-    };
-    
-async function uploadStoreImageToSupabase(file) {
-  const fileExt = file.name.split(".").pop();
-  const fileName = `store-${Date.now()}.${fileExt}`;
-
-  const { error } = await sb.storage
-    .from("store-images")
-    .upload(fileName, file, { upsert: true });
-
-  if (error) {
-    console.error("매장 이미지 업로드 실패:", error);
-    alert("업로드 실패");
-    return "";
-  }
-
-  const { data } = sb.storage
-    .from("store-images")
-    .getPublicUrl(fileName);
-
-  return data.publicUrl;
-}
-    
+    };  
+   
 loadProductsFromSupabase();
 loadOrdersFromSupabase();
 loadStoreImage();
 </script>
-</body>
-</html>
 </body>
 </html>
