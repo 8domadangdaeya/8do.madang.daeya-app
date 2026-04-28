@@ -782,6 +782,8 @@ if (error) {
 state.storeImage = data.value;
 render();
 };
+
+}
 async function loadStoreImage() {
   const { data, error } = await sb
     .from("settings")
